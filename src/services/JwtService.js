@@ -10,7 +10,7 @@ const generalAccessToken = async (payload) => {
     return access_token
 }
 
-const generalRefreshAccessToken = async (payload) => {
+const generalRefreshToken = async (payload) => {
     const refresh_token = jwt.sign({
         payload
     }, process.env.REFRESH_TOKEN, {expiresIn: '365d'})
@@ -18,7 +18,36 @@ const generalRefreshAccessToken = async (payload) => {
     return refresh_token
 }
 
+const refreshTokenJWTService = async (token) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            jwt.verify(token, process.env.REFRESH_TOKEN, async (err, user) => {
+                if(err) {
+                    resolve({
+                        status: 'ERROR',
+                        message: 'The authentication'
+                    })
+                }
+                const { payload } = user;
+                const access_token = await generalAccessToken({
+                    id: payload?.id,
+                    isAdmin: payload?.isAdmin
+                })
+                resolve({
+                    status: 'OK',
+                    message: 'Refresh token success',
+                    access_token
+                })
+            })
+        }
+        catch(e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     generalAccessToken,
-    generalRefreshAccessToken
+    generalRefreshToken,
+    refreshTokenJWTService
 }

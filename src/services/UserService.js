@@ -1,6 +1,6 @@
 const User = require('../models/UserModel')
 const bcrypt = require('bcrypt');
-const { generalAccessToken, generalRefreshAccessToken } = require('./JwtService');
+const { generalAccessToken, generalRefreshToken } = require('./JwtService');
 
 
 
@@ -79,7 +79,7 @@ const loginUser = (userLogin) => {
                 isAdmin: checkUser.isAdmin
             })
 
-            const refresh_token = await generalRefreshAccessToken({
+            const refresh_token = await generalRefreshToken({
                 id: checkUser.id,
                 isAdmin: checkUser.isAdmin
             })
@@ -103,7 +103,6 @@ const updateUser = (id, data) => {
             const checkUser = await User.findOne({
                 _id: id
             })
-            console.log('checkUser', checkUser);
             if(checkUser === null) {
                 resolve({
                     status: 'OK',
@@ -189,6 +188,8 @@ const getDetailsUser = (id) => {
         }
     })
 }
+
+
 
 module.exports = {
     createUser,
