@@ -13,23 +13,23 @@ const createUser = (newUser) => {
             })
             if(checkUser !== null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERR',
                     message: 'The email is already'
                 })
             }
             const hashPassword = bcrypt.hashSync(password, 10)
-            const createUser =await User.create({
+            const newUser =await User.create({
                 name, 
                 email, 
                 password: hashPassword, 
                 isAdmin,
                 phone
             })
-            if(createUser) {
+            if(newUser) {
                 resolve({
                     status: 'OK',
                     message: 'SUCCESS',
-                    data: createUser
+                    data: newUser
                 })
             }
             
@@ -42,21 +42,21 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
     return new Promise( async (resolve, reject) => {
-        const {name, email, password, confirmPassword, phone} = userLogin;
+        const { email, password} = userLogin;
         try {
             const checkUser = await User.findOne({
                 email: email
             })
             if(checkUser === null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERR',
                     message: 'The user is not define'
                 })
             }
             const comparePassword = bcrypt.compareSync(password, checkUser.password)
             if(!comparePassword) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERR',
                     message: 'The password or user incorrect'
                 })
             }
