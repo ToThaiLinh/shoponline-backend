@@ -75,7 +75,6 @@ const loginUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const userId = await req.params.id
-        console.log('userId', userId)
         const data = req.body
         console.log(data)
         if(!userId) {
@@ -91,6 +90,7 @@ const updateUser = async (req, res) => {
         console.log(e);
         return res.status(404).json({
             err: e,
+            status: 'ERR',
             message: 'lỗi rồi'
         })
     }
